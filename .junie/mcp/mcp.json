@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/Users/ahmad/.config/herd-lite/bin/php",
+            "args": [
+                "/Users/ahmad/Projects/e-commerce/my-shop/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
