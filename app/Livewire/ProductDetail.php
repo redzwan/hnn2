@@ -5,9 +5,6 @@ namespace App\Livewire;
 use App\Models\Product;
 use Livewire\Component;
 use Vanilo\Cart\Facades\Cart;
-use Livewire\Component;
-use Vanilo\Cart\Facades\Cart;
-use Vanilo\Product\Models\Product;
 
 class ProductDetail extends Component
 {
@@ -15,13 +12,11 @@ class ProductDetail extends Component
 
     public int $quantity = 1;
 
-    public int $quantity = 1;
     public bool $added = false;
 
     public function mount(Product $product): void
     {
         $this->product = $product->load('media');
-        $this->product = $product;
     }
 
     public function incrementQty(): void
