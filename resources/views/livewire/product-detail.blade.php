@@ -141,7 +141,7 @@
     <div class="flex flex-col">
         <p class="text-sm text-gray-500 font-medium">SKU: {{ $product->sku }}</p>
         <h1 class="mt-2 text-3xl font-bold text-gray-900 leading-tight">{{ $product->name }}</h1>
-        <p class="mt-4 text-3xl font-bold text-blue-600">RM {{ number_format($product->price, 2) }}</p>
+        <p class="mt-4 text-3xl font-bold text-blue-600">$ {{ number_format($product->price, 2) }}</p>
 
         @if($product->description)
             <div class="mt-6 prose prose-sm text-gray-600 max-w-none">
@@ -195,7 +195,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
             <div>
-                <p class="text-sm font-semibold text-gray-800">Free shipping on orders over RM 200</p>
+                <p class="text-sm font-semibold text-gray-800">Free shipping on orders over $200</p>
                 <p class="text-xs text-gray-500 mt-0.5">Estimated delivery: 3–5 business days</p>
             </div>
         </div>

@@ -34,7 +34,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Total Sales</p>
-                        <p class="text-2xl font-bold text-gray-900 mt-1">RM {{ number_format($totalSales, 2) }}</p>
+                        <p class="text-2xl font-bold text-gray-900 mt-1">$ {{ number_format($totalSales, 2) }}</p>
                     </div>
                     <div class="p-3 bg-green-100 rounded-lg">
                         <x-heroicon-o-currency-dollar class="w-8 h-8 text-green-600" />
@@ -58,7 +58,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500">Avg Order Value</p>
-                        <p class="text-2xl font-bold text-gray-900 mt-1">RM {{ number_format($averageOrderValue, 2) }}</p>
+                        <p class="text-2xl font-bold text-gray-900 mt-1">$ {{ number_format($averageOrderValue, 2) }}</p>
                     </div>
                     <div class="p-3 bg-purple-100 rounded-lg">
                         <x-heroicon-o-chart-bar class="w-8 h-8 text-purple-600" />
@@ -97,7 +97,7 @@
                                 <tr class="text-sm">
                                     <td class="py-3 text-gray-900">{{ $product->name ?? 'Product #' . $product->product_id }}</td>
                                     <td class="py-3 text-gray-600 text-right">{{ number_format($product->total_qty) }}</td>
-                                    <td class="py-3 text-gray-900 font-medium text-right">RM {{ number_format($product->total_sales, 2) }}</td>
+                                    <td class="py-3 text-gray-900 font-medium text-right">$ {{ number_format($product->total_sales, 2) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -116,7 +116,7 @@
                     @foreach($salesByDay as $day)
                         <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
                             <span class="text-sm text-gray-600">{{ $day['date'] }}</span>
-                            <span class="text-sm font-medium text-gray-900">RM {{ number_format($day['total'], 2) }}</span>
+                            <span class="text-sm font-medium text-gray-900">$ {{ number_format($day['total'], 2) }}</span>
                         </div>
                     @endforeach
                 </div>

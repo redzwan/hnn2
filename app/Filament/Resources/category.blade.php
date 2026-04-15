@@ -64,7 +64,7 @@
                                 <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">{{ $product->name }}</h3>
                             </a>
                             <div class="mt-3 flex items-center justify-between">
-                                <span class="text-lg font-bold text-gray-900">RM {{ number_format($product->price, 2) }}</span>
+                                <span class="text-lg font-bold text-gray-900">$ {{ number_format($product->price, 2) }}</span>
                                 <a href="/products/{{ $product->slug }}"
                                    class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700">
                                     Details

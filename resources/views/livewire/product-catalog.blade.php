@@ -77,7 +77,7 @@
                             </a>
                         </div>
                         <div class="mt-3 flex items-center justify-between">
-                            <span class="text-lg font-bold text-gray-900">RM {{ number_format($product->price, 2) }}</span>
+                            <span class="text-lg font-bold text-gray-900">$ {{ number_format($product->price, 2) }}</span>
                         </div>
                         <button wire:click="addToCart({{ $product->id }})"
                                 wire:loading.attr="disabled"

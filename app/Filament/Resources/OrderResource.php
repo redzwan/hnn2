@@ -63,7 +63,7 @@ class OrderResource extends Resource
                     ]),
                 Tables\Columns\TextColumn::make('total')
                     ->label('Total')
-                    ->getStateUsing(fn (Order $record) => 'RM ' . number_format($record->total(), 2)),
+                    ->getStateUsing(fn (Order $record) => '$ ' . number_format($record->total(), 2)),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Date')
                     ->dateTime('M j, Y g:i A')

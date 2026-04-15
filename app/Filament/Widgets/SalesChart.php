@@ -28,13 +28,13 @@ class SalesChart extends ChartWidget
                 ->whereDate('created_at', $date)
                 ->sum('price');
 
-            $data[] = $total / 100; // Convert to RM
+            $data[] = $total / 100; // Convert to $
         }
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Sales (RM)',
+                    'label' => 'Sales ($)',
                     'data' => $data,
                     'fill' => true,
                     'borderColor' => '#f59e0b',

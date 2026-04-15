@@ -153,7 +153,7 @@
                                                 <div class="flex items-center justify-between gap-2 flex-wrap">
                                                     <span class="text-sm font-semibold text-gray-800">{{ $method->name }}</span>
                                                     <span class="text-sm font-bold {{ $isFree ? 'text-green-600' : 'text-gray-900' }}">
-                                                        {{ $isFree ? 'FREE' : 'RM ' . number_format($cost, 2) }}
+                                                        {{ $isFree ? 'FREE' : '$ ' . number_format($cost, 2) }}
                                                     </span>
                                                 </div>
                                                 @if($eta || $threshold)
@@ -167,7 +167,7 @@
                                                             </span>
                                                         @endif
                                                         @if($threshold && !$isFree)
-                                                            <span class="text-green-600 font-medium">Free over RM {{ number_format($threshold, 2) }}</span>
+                                                            <span class="text-green-600 font-medium">Free over $ {{ number_format($threshold, 2) }}</span>
                                                         @endif
                                                         @if($isFree)
                                                             <span class="text-green-600 font-medium">Free shipping applied!</span>
@@ -266,26 +266,26 @@
                                     <p class="font-medium text-gray-800 truncate">{{ $item->product->name }}</p>
                                     <p class="text-gray-400 text-xs mt-0.5">× {{ $item->quantity }}</p>
                                 </div>
-                                <span class="font-semibold text-gray-900 shrink-0">RM {{ number_format($item->total, 2) }}</span>
+                                <span class="font-semibold text-gray-900 shrink-0">$ {{ number_format($item->total, 2) }}</span>
                             </div>
                         @endforeach
                     </div>
                     <div class="border-t border-gray-100 pt-4 space-y-2 text-sm">
                         <div class="flex justify-between text-gray-500">
                             <span>Subtotal</span>
-                            <span>RM {{ number_format($subtotal, 2) }}</span>
+                            <span>$ {{ number_format($subtotal, 2) }}</span>
                         </div>
                         <div class="flex justify-between text-gray-500">
                             <span>Shipping</span>
                             @if($this->shippingFee > 0)
-                                <span>RM {{ number_format($this->shippingFee, 2) }}</span>
+                                <span>$ {{ number_format($this->shippingFee, 2) }}</span>
                             @else
                                 <span class="text-green-600 font-medium">Free</span>
                             @endif
                         </div>
                         <div class="flex justify-between text-base font-bold text-gray-900 pt-2 border-t border-gray-100">
                             <span>Total</span>
-                            <span>RM {{ number_format($this->totalWithShipping, 2) }}</span>
+                            <span>$ {{ number_format($this->totalWithShipping, 2) }}</span>
                         </div>
                     </div>
                     <div class="mt-4 p-3 bg-blue-50 rounded-xl text-xs text-blue-700 flex items-start gap-2">

@@ -28,7 +28,7 @@ class StatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-clipboard-document-list')
                 ->color('warning'),
 
-            Stat::make('Revenue', 'RM '.number_format($totalRevenue, 2))
+            Stat::make('Revenue', '$ '.number_format($totalRevenue, 2))
                 ->description('From completed orders')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('success'),

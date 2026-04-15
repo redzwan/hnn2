@@ -73,7 +73,7 @@
                                         +
                                     </button>
                                 </div>
-                                <span class="font-bold text-gray-900">RM {{ number_format($item->total, 2) }}</span>
+                                <span class="font-bold text-gray-900">$ {{ number_format($item->total, 2) }}</span>
                             </div>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                     <div class="space-y-3 text-sm">
                         <div class="flex justify-between text-gray-600">
                             <span>Subtotal</span>
-                            <span class="font-medium">RM {{ number_format($total, 2) }}</span>
+                            <span class="font-medium">$ {{ number_format($total, 2) }}</span>
                         </div>
                         <div class="flex justify-between text-gray-600">
                             <span>Shipping</span>
@@ -96,7 +96,7 @@
                         </div>
                         <div class="border-t border-gray-100 pt-3 flex justify-between text-base font-bold text-gray-900">
                             <span>Total</span>
-                            <span>RM {{ number_format($total, 2) }}</span>
+                            <span>$ {{ number_format($total, 2) }}</span>
                         </div>
                     </div>
 

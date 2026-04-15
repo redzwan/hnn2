@@ -45,7 +45,7 @@ class ProductResource extends Resource
                         ->unique(Product::class, 'sku', ignoreRecord: true),
                     Forms\Components\TextInput::make('price')
                         ->numeric()
-                        ->prefix('RM')
+                        ->prefix('$')
                         ->required()
                         ->minValue(0),
                 ])->columns(2),

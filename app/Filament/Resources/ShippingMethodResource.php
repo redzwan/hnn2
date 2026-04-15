@@ -44,15 +44,15 @@ class ShippingMethodResource extends Resource
             Forms\Components\Section::make('Pricing')
                 ->schema([
                     Forms\Components\TextInput::make('configuration.cost')
-                        ->label('Shipping Fee (RM)')
+                        ->label('Shipping Fee ($)')
                         ->numeric()
-                        ->prefix('RM')
+                        ->prefix('$')
                         ->required()
                         ->minValue(0),
                     Forms\Components\TextInput::make('configuration.free_threshold')
-                        ->label('Free Shipping Above (RM)')
+                        ->label('Free Shipping Above ($)')
                         ->numeric()
-                        ->prefix('RM')
+                        ->prefix('$')
                         ->placeholder('Leave blank to disable')
                         ->helperText('Orders above this amount get free shipping'),
                     Forms\Components\TextInput::make('configuration.title')
@@ -90,11 +90,11 @@ class ShippingMethodResource extends Resource
                     ->weight('semibold'),
                 Tables\Columns\TextColumn::make('shipping_fee')
                     ->label('Fee')
-                    ->getStateUsing(fn ($record) => 'RM '.number_format((float) ($record->configuration['cost'] ?? 0), 2)),
+                    ->getStateUsing(fn ($record) => '$ '.number_format((float) ($record->configuration['cost'] ?? 0), 2)),
                 Tables\Columns\TextColumn::make('free_above')
                     ->label('Free Above')
                     ->getStateUsing(fn ($record) => isset($record->configuration['free_threshold']) && $record->configuration['free_threshold']
-                        ? 'RM '.number_format((float) $record->configuration['free_threshold'], 2)
+                        ? '$ '.number_format((float) $record->configuration['free_threshold'], 2)
                         : '—'),
                 Tables\Columns\TextColumn::make('eta')
                     ->label('ETA')

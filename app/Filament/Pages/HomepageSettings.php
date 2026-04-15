@@ -49,7 +49,7 @@ class HomepageSettings extends Page implements HasForms
             'hero_secondary_url' => Setting::get('homepage.hero_secondary_url', '/register'),
             'show_features' => (bool) Setting::get('homepage.show_features', true),
             'features' => $features ? json_decode($features, true) : [
-                ['icon' => 'truck', 'title' => 'Free Shipping', 'text' => 'On orders over RM 200'],
+                ['icon' => 'truck', 'title' => 'Free Shipping', 'text' => 'On orders over $200'],
                 ['icon' => 'refresh', 'title' => 'Easy Returns', 'text' => '30-day return policy'],
                 ['icon' => 'shield', 'title' => 'Secure Payment', 'text' => '100% protected'],
                 ['icon' => 'support', 'title' => '24/7 Support', 'text' => 'Always here to help'],

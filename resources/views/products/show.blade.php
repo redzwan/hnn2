@@ -31,7 +31,7 @@
         'offers' => [
             '@type'         => 'Offer',
             'url'           => $productUrl,
-            'priceCurrency' => 'MYR',
+            'priceCurrency' => 'AUD',
             'price'         => number_format((float) $product->price, 2, '.', ''),
             'availability'  => $availability,
             'itemCondition' => 'https://schema.org/NewCondition',
@@ -82,7 +82,7 @@
     <meta property="og:url"         content="{{ $productUrl }}">
     <meta property="og:site_name"   content="{{ $siteName }}">
     <meta property="product:price:amount"   content="{{ number_format((float) $product->price, 2, '.', '') }}">
-    <meta property="product:price:currency" content="MYR">
+    <meta property="product:price:currency" content="AUD">
     @if($imageUrl)
         <meta property="og:image"     content="{{ $imageUrl }}">
         <meta property="og:image:alt" content="{{ $product->name }}">
@@ -108,10 +108,9 @@
 @endpush
 
 @section('content')
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {{-- Breadcrumb nav — mirrors breadcrumb schema exactly --}}
-        <nav aria-label="Breadcrumb" class="flex items-center flex-wrap gap-1.5 text-sm text-gray-500 mb-8">
+        <nav class="flex items-center flex-wrap gap-1.5 text-sm text-gray-500 mb-8">
             <a href="/" class="hover:text-blue-600 transition-colors">Home</a>
 
             @if($primaryCategory)
@@ -126,25 +125,6 @@
 
             <svg class="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             <span class="text-gray-900 font-medium truncate">{{ $product->name }}</span>
-        </nav>
-
-        <livewire:product-detail :product="$product" />
-
-@section('title', $product->name)
-
-@section('content')
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <!-- Breadcrumb -->
-        <nav class="flex items-center gap-2 text-sm text-gray-500 mb-8">
-            <a href="/" class="hover:text-blue-600 transition-colors">Home</a>
-            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-            <a href="/products" class="hover:text-blue-600 transition-colors">Products</a>
-            <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-            <span class="text-gray-800 font-medium truncate max-w-48">{{ $product->name }}</span>
         </nav>
 
         <livewire:product-detail :product="$product" />

@@ -19,7 +19,7 @@
                     <h3 class="text-lg font-bold text-gray-800 hover:text-blue-600 transition-colors">{{ $product->name }}</h3>
                 </a>
                 <p class="mt-2 text-gray-500 text-sm">SKU: {{ $product->sku }}</p>
-                <p class="mt-3 text-xl font-semibold text-blue-600">RM {{ number_format($product->price, 2) }}</p>
+                <p class="mt-3 text-xl font-semibold text-blue-600">$ {{ number_format($product->price, 2) }}</p>
 
                 <button wire:click="addToCart({{ $product->id }})"
                         class="mt-auto pt-4 w-full py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-black text-white hover:bg-gray-800 disabled:opacity-50">
