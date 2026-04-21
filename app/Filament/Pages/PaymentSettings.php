@@ -38,6 +38,10 @@ class PaymentSettings extends Page
             'billplz_x_signature_key' => Setting::get('billplz.x_signature_key', ''),
             'billplz_mode' => Setting::get('billplz.mode', 'sandbox'),
             'billplz_payment_methods' => json_decode(Setting::get('billplz.payment_methods', '["fpx","credit_card"]'), true),
+            'paypal_enabled' => (bool) Setting::get('paypal.enabled', false),
+            'paypal_client_id' => Setting::get('paypal.client_id', ''),
+            'paypal_client_secret' => Setting::get('paypal.client_secret', ''),
+            'paypal_mode' => Setting::get('paypal.mode', 'sandbox'),
         ]);
     }
 
@@ -48,6 +52,8 @@ class PaymentSettings extends Page
             ->schema([
                 Forms\Components\Section::make('BillPlz Configuration')
                     ->description('Configure your BillPlz payment gateway for FPX and credit card payments.')
+                    ->collapsible()
+                    ->collapsed()
                     ->schema([
                         Forms\Components\Toggle::make('billplz_enabled')
                             ->label('Enable BillPlz'),
@@ -74,12 +80,8 @@ class PaymentSettings extends Page
                             ->label('Webhook / Callback URL')
                             ->content(fn () => url('/api/billplz/webhook'))
                             ->helperText('Enter this URL in your BillPlz collection callback settings.'),
-                    ]),
-                Forms\Components\Section::make('Payment Methods')
-                    ->description('Choose which payment methods to accept via BillPlz.')
-                    ->schema([
                         Forms\Components\CheckboxList::make('billplz_payment_methods')
-                            ->label('Enabled Payment Methods')
+                            ->label('Payment Methods')
                             ->options([
                                 'fpx' => 'FPX (Online Banking)',
                                 'credit_card' => 'Credit / Debit Card',
@@ -88,6 +90,36 @@ class PaymentSettings extends Page
                                 'fpx' => 'Accept online banking payments via FPX.',
                                 'credit_card' => 'Accept Visa and Mastercard payments.',
                             ]),
+                    ]),
+                Forms\Components\Section::make('PayPal (Australia)')
+                    ->description('Accept PayPal payments in Australian Dollars (AUD).')
+                    ->collapsible()
+                    ->collapsed()
+                    ->schema([
+                        Forms\Components\Toggle::make('paypal_enabled')
+                            ->label('Enable PayPal'),
+                        Forms\Components\TextInput::make('paypal_client_id')
+                            ->label('Client ID')
+                            ->helperText('Your PayPal app Client ID from the PayPal Developer Dashboard.'),
+                        Forms\Components\TextInput::make('paypal_client_secret')
+                            ->label('Client Secret')
+                            ->password()
+                            ->revealable()
+                            ->helperText('Your PayPal app Client Secret from the PayPal Developer Dashboard.'),
+                        Forms\Components\Select::make('paypal_mode')
+                            ->label('Mode')
+                            ->options([
+                                'sandbox' => 'Sandbox (Testing)',
+                                'production' => 'Production (Live)',
+                            ]),
+                        Forms\Components\Placeholder::make('paypal_return_url')
+                            ->label('Return URL')
+                            ->content(fn () => url('/checkout/paypal/return/{order}'))
+                            ->helperText('Configure this as the return URL in your PayPal app settings.'),
+                        Forms\Components\Placeholder::make('paypal_currency_info')
+                            ->label('Currency')
+                            ->content('AUD (Australian Dollar)')
+                            ->helperText('PayPal payments are processed in Australian Dollars.'),
                     ]),
             ]);
     }
@@ -107,6 +139,10 @@ class PaymentSettings extends Page
                         'billplz.x_signature_key' => $data['billplz_x_signature_key'] ?? '',
                         'billplz.mode' => $data['billplz_mode'] ?? 'sandbox',
                         'billplz.payment_methods' => json_encode($data['billplz_payment_methods'] ?? []),
+                        'paypal.enabled' => $data['paypal_enabled'] ? '1' : '0',
+                        'paypal.client_id' => $data['paypal_client_id'] ?? '',
+                        'paypal.client_secret' => $data['paypal_client_secret'] ?? '',
+                        'paypal.mode' => $data['paypal_mode'] ?? 'sandbox',
                     ]);
 
                     Notification::make()

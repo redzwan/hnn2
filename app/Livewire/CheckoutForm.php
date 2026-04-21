@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Services\BillplzService;
+use App\Services\PaypalService;
 use Livewire\Component;
 use Vanilo\Cart\Facades\Cart;
 use Vanilo\Foundation\Factories\OrderFactory;
@@ -80,7 +81,7 @@ class CheckoutForm extends Component
             'state' => 'required|string|max:100',
             'zip' => 'required|string|max:20',
             'shippingMethodId' => 'required|exists:shipping_methods,id',
-            'paymentMethod' => 'required|in:billplz,cod',
+            'paymentMethod' => 'required|in:billplz,paypal,cod',
         ];
     }
 
@@ -148,6 +149,17 @@ class CheckoutForm extends Component
             }
         }
 
+        // For PayPal, validate the gateway is ready before creating the order
+        if ($this->paymentMethod === 'paypal') {
+            $paypal = app(PaypalService::class);
+
+            if (! $paypal->isEnabled()) {
+                $this->addError('paymentMethod', 'PayPal is currently unavailable. Please choose another payment method.');
+
+                return;
+            }
+        }
+
         $cart = Cart::model();
         $subtotal = (float) Cart::total();
         $shippingFee = $this->shippingFee;
@@ -160,7 +172,11 @@ class CheckoutForm extends Component
             ];
         })->all();
 
-        $paymentLabel = $this->paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment (BillPlz)';
+        $paymentLabel = match ($this->paymentMethod) {
+            'cod' => 'Cash on Delivery',
+            'paypal' => 'PayPal (AUD)',
+            default => 'Online Payment (BillPlz)',
+        };
         $notesWithPayment = trim(($this->notes ? $this->notes."\n" : '')."Payment: {$paymentLabel}");
 
         $orderData = [
@@ -207,6 +223,33 @@ class CheckoutForm extends Component
 
                 // Order exists but payment failed — show error, keep cart intact
                 $this->addError('paymentMethod', 'Payment gateway error. Please try again or choose Cash on Delivery.');
+
+                return;
+            }
+        }
+
+        // PayPal — redirect to PayPal approval page
+        if ($this->paymentMethod === 'paypal') {
+            try {
+                $approvalUrl = app(PaypalService::class)->createOrder(
+                    $order,
+                    $totalAmount,
+                    route('paypal.return', ['order' => $order->getNumber()]),
+                    route('paypal.cancel', ['order' => $order->getNumber()]),
+                );
+
+                Cart::destroy();
+                $this->dispatch('cartUpdated');
+                $this->redirect($approvalUrl, navigate: false);
+
+                return;
+            } catch (\Exception $e) {
+                \Log::error('PayPal order creation failed', [
+                    'order' => $order->getNumber(),
+                    'error' => $e->getMessage(),
+                ]);
+
+                $this->addError('paymentMethod', 'PayPal error. Please try again or choose another payment method.');
 
                 return;
             }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BillplzController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PageController;
 use App\Models\Category;
 use App\Models\Page;
@@ -100,6 +101,10 @@ Route::post('/logout', function () {
 // ===== BILLPLZ PAYMENT =====
 Route::get('/checkout/billplz/return/{order}', [BillplzController::class, 'paymentReturn'])->name('billplz.return');
 Route::post('/api/billplz/webhook', [BillplzController::class, 'callback'])->name('billplz.callback')->withoutMiddleware([VerifyCsrfToken::class]);
+
+// ===== PAYPAL PAYMENT =====
+Route::get('/checkout/paypal/return/{order}', [PaypalController::class, 'paymentReturn'])->name('paypal.return');
+Route::get('/checkout/paypal/cancel/{order}', [PaypalController::class, 'paymentCancel'])->name('paypal.cancel');
 
 // ===== SEO FILES =====
 Route::get('/sitemap.xml', function () {
