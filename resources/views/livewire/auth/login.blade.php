@@ -23,10 +23,10 @@
 
                 <div class="flex items-center justify-between">
                     <label class="flex items-center gap-2 cursor-pointer">
-                        <input wire:model="remember" type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <input wire:model="remember" type="checkbox" class="rounded border-gray-300 text-primary focus:ring-blue-500">
                         <span class="text-sm text-gray-600">Remember me</span>
                     </label>
-                    <a href="/forgot-password" class="text-sm text-blue-600 hover:underline font-medium">Forgot password?</a>
+                    <a href="/forgot-password" class="text-sm text-primary hover:underline font-medium">Forgot password?</a>
                 </div>
 
                 <button type="submit"
@@ -43,7 +43,7 @@
 
             <p class="mt-6 text-center text-sm text-gray-500">
                 Don't have an account?
-                <a href="/register" class="text-blue-600 hover:underline font-medium">Sign up for free</a>
+                <a href="/register" class="text-primary hover:underline font-medium">Sign up for free</a>
             </p>
         </div>
     </div>

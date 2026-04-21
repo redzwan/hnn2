@@ -94,4 +94,35 @@ return [
         'product_card_style' => 'default',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Aesop Editorial Theme
+    |--------------------------------------------------------------------------
+    | Minimalist luxury theme — warm earth palette, serif headings, full-bleed hero.
+    | Ideal for beauty, wellness, lifestyle, and premium retail brands.
+    */
+    'aesop' => [
+        'name' => 'Aesop Editorial',
+        'description' => 'Minimalist luxury theme with warm earth tones, serif typography, and full-bleed imagery.',
+        'preview' => 'images/themes/aesop.png',
+        'fonts' => [
+            'heading' => "'Cormorant Garamond', serif",
+            'body' => "'Inter', sans-serif",
+            'google_import' => 'https://fonts.bunny.net/css?family=cormorant-garamond:300,400,500,600&family=inter:300,400,500&display=swap',
+        ],
+        'colors' => [
+            'primary' => '#6b5c45',
+            'primary-dark' => '#4a3f2f',
+            'primary-light' => '#9b8a70',
+            'accent' => '#8a9a7a',
+            'surface' => '#f7f3ed',
+            'surface-dark' => '#1a1612',
+            'on-primary' => '#ffffff',
+            'on-surface-dark' => '#e8e0d5',
+        ],
+        'hero_style' => 'aesop',
+        'layout_style' => 'editorial',
+        'product_card_style' => 'editorial',
+    ],
+
 ];

@@ -69,7 +69,7 @@
                     <a href="/admin" class="text-sm text-primary hover:underline">Add products in the admin panel &rarr;</a>
                 </div>
             @else
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach($featured as $product)
                         @include('components.theme.product-card-' . $cardStyle, ['product' => $product])
                     @endforeach

@@ -15,7 +15,7 @@
                     </div>
                     <p class="text-sm text-gray-600">We've sent a password reset link to <span class="font-semibold text-gray-900">{{ $email }}</span></p>
                     <p class="text-xs text-gray-400">Didn't receive the email? Check your spam folder or try again.</p>
-                    <button wire:click="$set('linkSent', false)" class="text-sm text-blue-600 hover:underline font-medium">
+                    <button wire:click="$set('linkSent', false)" class="text-sm text-primary hover:underline font-medium">
                         Try another email
                     </button>
                 </div>
@@ -42,7 +42,7 @@
             @endif
 
             <p class="mt-6 text-center text-sm text-gray-500">
-                <a href="/login" class="text-blue-600 hover:underline font-medium">Back to sign in</a>
+                <a href="/login" class="text-primary hover:underline font-medium">Back to sign in</a>
             </p>
         </div>
     </div>

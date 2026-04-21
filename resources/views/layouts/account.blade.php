@@ -13,8 +13,8 @@
 
     <header class="bg-white border-b border-gray-100 shadow-sm">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2 font-bold text-xl text-gray-900 hover:text-blue-600 transition-colors">
-                <svg class="size-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="/" class="flex items-center gap-2 font-bold text-xl text-gray-900 hover:text-primary transition-colors">
+                <svg class="size-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                 </svg>
                 <span>{{ config('app.name') }}</span>
@@ -51,7 +51,7 @@
                         @endphp
                         @foreach($links as $link)
                             <a href="{{ route($link['route']) }}"
-                               class="flex items-center gap-3 px-5 py-2.5 text-sm transition-colors {{ request()->routeIs($link['route']) ? 'bg-blue-50 text-blue-700 font-medium border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                               class="flex items-center gap-3 px-5 py-2.5 text-sm transition-colors {{ request()->routeIs($link['route']) ? 'bg-blue-50 text-primary-dark font-medium border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                                 <svg class="size-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $link['icon'] }}"/>
                                 </svg>

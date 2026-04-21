@@ -2,14 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Setting;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Vanilo\Cart\Facades\Cart;
-use Livewire\Component;
-use Livewire\WithPagination;
-use Vanilo\Cart\Facades\Cart;
-use Vanilo\Product\Models\Product;
 
 class ProductCatalog extends Component
 {
@@ -19,11 +17,23 @@ class ProductCatalog extends Component
 
     public string $sortBy = 'latest';
 
-    public string $sortBy = 'latest';
+    public ?int $categoryId = null;
+
     public ?int $addedProductId = null;
 
     public function updatingSearch(): void
     {
+        $this->resetPage();
+    }
+
+    public function updatingCategoryId(): void
+    {
+        $this->resetPage();
+    }
+
+    public function filterByCategory(?int $id): void
+    {
+        $this->categoryId = $id;
         $this->resetPage();
     }
 
@@ -34,14 +44,12 @@ class ProductCatalog extends Component
         $this->addedProductId = $productId;
         $this->dispatch('cartUpdated');
 
-        // Reset the "added" state after 2 seconds
         $this->js("setTimeout(() => \$wire.set('addedProductId', null), 2000)");
     }
 
     public function render()
     {
         $query = Product::actives()->with('media');
-        $query = Product::actives();
 
         if ($this->search) {
             $query->where(function ($q) {
@@ -50,21 +58,20 @@ class ProductCatalog extends Component
             });
         }
 
+        if ($this->categoryId) {
+            $query->whereHas('categories', fn ($q) => $q->where('categories.id', $this->categoryId));
+        }
+
         $query->when($this->sortBy === 'latest', fn ($q) => $q->latest())
             ->when($this->sortBy === 'price_asc', fn ($q) => $q->orderBy('price'))
             ->when($this->sortBy === 'price_desc', fn ($q) => $q->orderByDesc('price'))
             ->when($this->sortBy === 'name', fn ($q) => $q->orderBy('name'));
-                  ->orWhere('sku', 'like', "%{$this->search}%");
-            });
-        }
 
-        $query->when($this->sortBy === 'latest', fn($q) => $q->latest())
-              ->when($this->sortBy === 'price_asc', fn($q) => $q->orderBy('price'))
-              ->when($this->sortBy === 'price_desc', fn($q) => $q->orderByDesc('price'))
-              ->when($this->sortBy === 'name', fn($q) => $q->orderBy('name'));
+        $showCategoryPills = (bool) Setting::get('homepage.show_category_pills', true);
 
         return view('livewire.product-catalog', [
             'products' => $query->paginate(12),
+            'categories' => $showCategoryPills ? Category::active()->roots()->orderBy('sort_order')->get() : collect(),
         ]);
     }
 }

@@ -77,7 +77,7 @@
                 @foreach($mediaItems as $i => $media)
                     <button @click="go({{ $i }})"
                             class="w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all"
-                            :class="{{ $i }} === current ? 'border-blue-500 ring-2 ring-blue-300' : 'border-transparent hover:border-gray-300'">
+                            :class="{{ $i }} === current ? 'border-primary ring-2 ring-primary/30' : 'border-transparent hover:border-gray-300'">
                         <img src="{{ $media->getUrl() }}" alt="{{ $product->name }} {{ $i + 1 }}"
                              class="w-full h-full object-cover">
                     </button>
@@ -141,7 +141,7 @@
     <div class="flex flex-col">
         <p class="text-sm text-gray-500 font-medium">SKU: {{ $product->sku }}</p>
         <h1 class="mt-2 text-3xl font-bold text-gray-900 leading-tight">{{ $product->name }}</h1>
-        <p class="mt-4 text-3xl font-bold text-blue-600">$ {{ number_format($product->price, 2) }}</p>
+        <p class="mt-4 text-3xl font-bold text-primary">${{ number_format($product->price, 2) }}</p>
 
         @if($product->description)
             <div class="mt-6 prose prose-sm text-gray-600 max-w-none">
@@ -170,7 +170,7 @@
             <button wire:click="addToCart"
                     wire:loading.attr="disabled"
                     class="flex-1 py-3.5 px-6 inline-flex justify-center items-center gap-2 text-sm font-semibold rounded-xl transition-all duration-300
-                        {{ $added ? 'bg-green-500 text-white' : 'bg-gray-900 text-white hover:bg-blue-600' }}">
+                        {{ $added ? 'bg-green-500 text-white' : 'bg-gray-900 text-white hover:bg-primary' }}">
                 @if($added)
                     <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
@@ -184,7 +184,7 @@
                 @endif
             </button>
             <a href="/cart"
-               class="py-3.5 px-5 inline-flex items-center justify-center text-sm font-semibold rounded-xl border-2 border-gray-200 text-gray-700 hover:border-blue-600 hover:text-blue-600 transition-colors">
+               class="py-3.5 px-5 inline-flex items-center justify-center text-sm font-semibold rounded-xl border-2 border-gray-200 text-gray-700 hover:border-primary hover:text-primary transition-colors">
                 View Cart
             </a>
         </div>

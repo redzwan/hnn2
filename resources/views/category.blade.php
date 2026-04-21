@@ -30,7 +30,7 @@
 
 @section('content')
     <!-- ===== CATEGORY HERO ===== -->
-    <section class="relative bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white overflow-hidden">
+    <section class="relative bg-slate-900 text-white overflow-hidden" style="min-height: 320px;">
         @if($category->banner)
             @php
                 $bannerUrl = Str::startsWith($category->banner, ['http://', 'https://'])
@@ -38,16 +38,10 @@
                     : asset('storage/' . $category->banner);
             @endphp
             <img src="{{ $bannerUrl }}" alt="{{ $category->name }}" class="absolute inset-0 w-full h-full object-cover">
-            {{-- Base dim so bright areas don't blow out --}}
-            <div class="absolute inset-0 bg-black/30"></div>
-            {{-- Strong left-side gradient for text legibility --}}
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
-            {{-- Bottom-to-top gradient for breadcrumb / product count legibility --}}
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
-        @else
-            <div class="absolute inset-0 bg-black/60"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
         @endif
+        <div class="absolute inset-0" style="background: rgba(0,0,0,0.45);"></div>
+        <div class="absolute inset-0" style="background: linear-gradient(to right, rgba(15,23,42,0.92) 0%, rgba(15,23,42,0.65) 45%, transparent 100%);"></div>
+        <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(15,23,42,0.75) 0%, rgba(15,23,42,0.15) 50%, transparent 100%);"></div>
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
 
@@ -91,7 +85,7 @@
             <div class="flex flex-wrap gap-3">
                 @foreach($category->children()->active()->orderBy('sort_order')->get() as $child)
                     <a href="/category/{{ $child->slug }}"
-                       class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-blue-600 transition-colors shadow-sm">
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-primary transition-colors shadow-sm">
                         {{ $child->name }}
                         <span class="text-xs text-gray-400">({{ $child->products()->count() }})</span>
                     </a>
@@ -105,32 +99,34 @@
         @if($category->products->isEmpty())
             <div class="text-center py-20 bg-gray-50 rounded-2xl">
                 <p class="text-gray-500 text-lg mb-4">No products in this category yet.</p>
-                <a href="/products" class="text-sm text-blue-600 hover:underline">Browse all products →</a>
+                <a href="/products" class="text-sm text-primary hover:underline">Browse all products →</a>
             </div>
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($category->products as $product)
                     <div class="group flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                        <a href="/products/{{ $product->slug }}" class="block overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 h-52 flex items-center justify-center">
+                        <a href="/products/{{ $product->slug }}" class="block relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100" style="aspect-ratio: 1/1;">
                             @if($product->hasMedia('images'))
                                 <img src="{{ $product->getFirstMediaUrl('images') }}"
                                      alt="{{ $product->name }}"
-                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             @else
-                                <svg class="size-16 text-blue-200 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <svg class="size-16 text-blue-200 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                                    </svg>
+                                </div>
                             @endif
                         </a>
                         <div class="flex flex-col flex-1 p-4">
                             <p class="text-xs text-gray-400 mb-1">{{ $product->sku }}</p>
                             <a href="/products/{{ $product->slug }}" class="block flex-1">
-                                <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">{{ $product->name }}</h3>
+                                <h3 class="font-semibold text-gray-900 group-hover:text-primary transition-colors line-clamp-2">{{ $product->name }}</h3>
                             </a>
                             <div class="mt-3 flex items-center justify-between">
-                                <span class="text-lg font-bold text-gray-900">$ {{ number_format($product->price, 2) }}</span>
+                                <span class="text-lg font-bold text-gray-900">${{ number_format($product->price, 2) }}</span>
                                 <a href="/products/{{ $product->slug }}"
-                                   class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700">
+                                   class="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary-dark">
                                     Details
                                     <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>

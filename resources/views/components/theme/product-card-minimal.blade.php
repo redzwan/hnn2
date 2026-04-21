@@ -19,6 +19,6 @@
                 {{ $product->name }}
             </h3>
         </a>
-        <p class="text-sm" style="color: var(--color-primary)">$ {{ number_format($product->price, 2) }}</p>
+        <p class="text-sm" style="color: var(--color-primary)">${{ number_format($product->price, 2) }}</p>
     </div>
 </div>
