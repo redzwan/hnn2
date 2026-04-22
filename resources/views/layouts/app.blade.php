@@ -17,6 +17,31 @@
     <link href="{{ $theme['fonts']['google_import'] }}" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>:root { {!! $themeService->cssVariables() !!} }</style>
+    <style>
+        /* ── Allbirds-inspired typography ── */
+        body {
+            font-size: 15px;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        h1 { font-size: 2.75rem; font-weight: 300; letter-spacing: -0.04em; line-height: 1.05; }
+        h2 { font-size: 2rem;    font-weight: 300; letter-spacing: -0.03em; line-height: 1.1;  }
+        h3 { font-size: 1.35rem; font-weight: 400; letter-spacing: -0.02em; line-height: 1.2;  }
+        h4 { font-size: 1.1rem;  font-weight: 500; letter-spacing: -0.015em; }
+        h5, h6 { font-size: 0.95rem; font-weight: 600; letter-spacing: -0.01em; }
+
+        /* Nav — tight, readable */
+        header nav a, header nav button { font-size: 13px; font-weight: 500; letter-spacing: 0.01em; }
+
+        /* Footer section headings */
+        footer h3 { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+        footer a, footer p, footer li { font-size: 13px; }
+
+        /* Buttons */
+        button, [type="submit"] { letter-spacing: -0.01em; }
+    </style>
     @livewireStyles
     @stack('head')
     <style>

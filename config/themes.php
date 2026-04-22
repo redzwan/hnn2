@@ -13,9 +13,9 @@ return [
         'description' => 'Clean modern e-commerce theme with vibrant blue tones.',
         'preview' => 'images/themes/default.png',
         'fonts' => [
-            'heading' => "'Instrument Sans', sans-serif",
-            'body' => "'Instrument Sans', sans-serif",
-            'google_import' => 'https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700&display=swap',
+            'heading' => "'DM Sans', sans-serif",
+            'body' => "'DM Sans', sans-serif",
+            'google_import' => 'https://fonts.bunny.net/css?family=dm-sans:300,400,500,600,700&display=swap',
         ],
         'colors' => [
             'primary' => '#3b82f6',
