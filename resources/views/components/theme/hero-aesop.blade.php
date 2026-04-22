@@ -1,6 +1,8 @@
 {{-- Aesop Editorial: full-bleed slideshow hero — minimal, luxury, centered editorial text --}}
 @php
+    // hero_images may be stored as [{url: "..."}, ...] or ["url", ...]
     $heroImages = collect($homepage['hero_images'] ?? [])
+        ->map(fn ($item) => is_array($item) ? ($item['url'] ?? null) : $item)
         ->filter()
         ->values()
         ->toArray();
@@ -78,64 +80,76 @@
             </div>
         </template>
 
-        <div class="absolute inset-0" style="background: rgba(0,0,0,{{ $overlayOpacity / 100 }});"></div>
+        {{-- Bottom-left fade gradient — fades up and to the right --}}
+        <div class="absolute bottom-0 left-0 right-0 h-72 pointer-events-none"
+             style="background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.35) 45%, transparent 100%);"></div>
     </div>
 
-    {{-- Content — centered, editorial --}}
-    <div class="relative z-10 text-center text-white px-6 max-w-3xl mx-auto">
+    {{-- Bottom-left: title + button —— Studio McGee style --}}
+    <div class="absolute bottom-0 left-2 z-10 pl-16 sm:pl-24 pr-10 pb-14 max-w-2xl">
 
         @if(! empty($homepage['hero_badge']))
-            <p class="text-xs font-light tracking-[0.3em] uppercase text-white/60 mb-10">
+            <p class="text-xs font-light tracking-[0.25em] uppercase text-white mb-4"
+               style="font-family: {{ $theme['fonts']['body'] }}">
                 {{ $homepage['hero_badge'] }}
             </p>
         @endif
 
-        <h1 class="text-5xl sm:text-6xl lg:text-8xl font-light leading-[1.05] tracking-tight mb-8"
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-light leading-[1.1] text-white mb-4"
             style="font-family: {{ $theme['fonts']['heading'] }}">
             {{ $homepage['hero_title'] }}
         </h1>
 
         @if(! empty($homepage['hero_subtitle']))
-            <p class="text-sm sm:text-base font-light tracking-wide leading-relaxed text-white/70 max-w-md mx-auto mb-12"
+            <p class="text-sm sm:text-base font-light leading-relaxed text-white mb-8 max-w-md"
                style="font-family: {{ $theme['fonts']['body'] }}">
                 {{ $homepage['hero_subtitle'] }}
             </p>
         @endif
 
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            @if(! empty($homepage['hero_cta_text']))
-                <a href="{{ $homepage['hero_cta_url'] ?? '/products' }}"
-                   class="inline-block px-10 py-3.5 text-xs font-light tracking-[0.2em] uppercase border border-white/60 text-white hover:bg-white hover:text-surface-dark transition-all duration-300"
-                   style="font-family: {{ $theme['fonts']['body'] }}">
-                    {{ $homepage['hero_cta_text'] }}
-                </a>
-            @endif
+        @if(! empty($homepage['hero_secondary_text']))
+            <a href="{{ $homepage['hero_secondary_url'] ?? '/products' }}"
+               class="inline-block text-xs font-light tracking-[0.2em] uppercase border border-white text-white hover:bg-white hover:text-black transition-all duration-300"
+               style="font-family: {{ $theme['fonts']['body'] }}; padding: 22px;">
+                {{ $homepage['hero_secondary_text'] }}
+            </a>
+        @endif
+    </div>
 
-            @if(! empty($homepage['hero_secondary_text']))
-                <a href="{{ $homepage['hero_secondary_url'] ?? '/register' }}"
-                   class="inline-block px-10 py-3.5 text-xs font-light tracking-[0.2em] uppercase text-white/60 hover:text-white transition-colors duration-300"
-                   style="font-family: {{ $theme['fonts']['body'] }}">
-                    {{ $homepage['hero_secondary_text'] }}
-                </a>
-            @endif
+    {{-- Bottom-right: prev arrow + dots + next arrow --}}
+    <div class="absolute bottom-10 right-10 z-10 flex items-center gap-4"
+         x-show="images.length > 1"
+         x-transition:enter="transition ease-out duration-700"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         style="position: absolute; right: 41px; bottom: 20px;">
+
+        {{-- Prev --}}
+        <button @click="advance(-1)"
+                class="text-white/70 hover:text-white transition-colors duration-200 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+
+        {{-- Dots --}}
+        <div class="flex items-center gap-2.5">
+            <template x-for="(img, i) in images" :key="i">
+                <button @click="go(i)"
+                        class="rounded-full transition-all duration-400 focus:outline-none"
+                        :class="i === current
+                            ? 'w-2.5 h-2.5 bg-white'
+                            : 'w-2 h-2 bg-white/40 hover:bg-white/70'">
+                </button>
+            </template>
         </div>
-    </div>
 
-    {{-- Dot indicators --}}
-    <div class="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-2 z-10"
-         x-show="images.length > 1">
-        <template x-for="(img, i) in images" :key="i">
-            <button @click="go(i)"
-                    class="rounded-full transition-all duration-300"
-                    :class="i === current ? 'w-6 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/40 hover:bg-white/70'">
-            </button>
-        </template>
-    </div>
-
-    {{-- Scroll indicator --}}
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30">
-        <span class="text-[10px] tracking-[0.25em] uppercase font-light"
-              style="font-family: {{ $theme['fonts']['body'] }}">Scroll</span>
-        <div class="w-px h-8 bg-white/20 animate-pulse"></div>
+        {{-- Next --}}
+        <button @click="advance(1)"
+                class="text-white/70 hover:text-white transition-colors duration-200 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
     </div>
 </section>

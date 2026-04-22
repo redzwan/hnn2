@@ -35,7 +35,13 @@ class HomepageSettings extends Page implements HasForms
     public function mount(): void
     {
         $features   = Setting::get('homepage.features');
-        $heroImages = json_decode(Setting::get('homepage.hero_images', '[]'), true) ?: [];
+        $rawImages  = json_decode(Setting::get('homepage.hero_images', '[]'), true) ?: [];
+
+        // Normalise: may be stored as plain URL strings or as [{url: "..."}] objects
+        $heroImages = array_values(array_filter(array_map(
+            fn ($item) => is_array($item) ? ($item['url'] ?? null) : $item,
+            $rawImages
+        )));
 
         $this->form->fill([
             'hero_title'               => Setting::get('homepage.hero_title', 'Your Receipts. Our Rolls.'),
@@ -46,10 +52,18 @@ class HomepageSettings extends Page implements HasForms
             'hero_secondary_text'      => Setting::get('homepage.hero_secondary_text', 'View Catalogue'),
             'hero_secondary_url'       => Setting::get('homepage.hero_secondary_url', '/products'),
             'hero_images'              => array_map(function ($url) {
+                // Convert full URL → path relative to S3/MinIO bucket
+                // e.g. https://s3.dev-stage.net/posmart/banners/hero-1.jpg → banners/hero-1.jpg
+                // e.g. https://site.com/storage/banners/hero-1.jpg → banners/hero-1.jpg
                 $endpoint = rtrim(config('filesystems.disks.s3.endpoint', ''), '/');
                 $bucket   = config('filesystems.disks.s3.bucket', '');
-                $prefix   = ($endpoint && $bucket) ? "{$endpoint}/{$bucket}/" : '';
-                $path     = $prefix ? ltrim(str_replace($prefix, '', $url), '/') : ltrim(parse_url($url, PHP_URL_PATH) ?? $url, '/');
+
+                if ($endpoint && $bucket && str_contains($url, $endpoint)) {
+                    $path = ltrim(str_replace("{$endpoint}/{$bucket}/", '', $url), '/');
+                } else {
+                    $urlPath = parse_url($url, PHP_URL_PATH) ?? $url;
+                    $path    = ltrim(preg_replace('#^/storage/#', '', $urlPath), '/');
+                }
 
                 return ['file' => $path];
             }, $heroImages),

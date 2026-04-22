@@ -18,7 +18,7 @@
          }" class="flex flex-col gap-3">
 
         <!-- Main image + arrows -->
-        <div class="relative bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl h-96 lg:h-[500px] flex items-center justify-center overflow-hidden select-none"
+        <div class="relative bg-white border border-gray-100 rounded-2xl h-96 lg:h-[500px] flex items-center justify-center overflow-hidden select-none"
              id="zoom-container">
 
             @if($mediaItems->isNotEmpty())
@@ -26,7 +26,7 @@
                      src="{{ $mediaItems->first()->getUrl() }}"
                      alt="{{ $product->name }}"
                      id="zoom-image"
-                     class="w-full h-full object-cover rounded-2xl"
+                     class="w-full h-full object-contain rounded-2xl p-4"
                      draggable="false">
 
                 <!-- Liquid Glass Lens -->
@@ -46,7 +46,7 @@
                 </div>
 
                 <!-- Prev arrow -->
-                <button @click="prev" :disabled="current === 0"
+                <button x-show="images.length > 1" @click="prev" :disabled="current === 0"
                         class="z-10 flex items-center justify-center rounded-full transition-all"
                         style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 56px; height: 56px; background-color: rgba(0,0,0,0.75); box-shadow: 0 0 0 4px rgba(255,255,255,0.4), 0 8px 24px rgba(0,0,0,0.5);"
                         :class="current === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:scale-110'">
@@ -56,7 +56,7 @@
                 </button>
 
                 <!-- Next arrow -->
-                <button @click="next" :disabled="current === images.length - 1"
+                <button x-show="images.length > 1" @click="next" :disabled="current === images.length - 1"
                         class="z-10 flex items-center justify-center rounded-full transition-all"
                         style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 56px; height: 56px; background-color: rgba(0,0,0,0.75); box-shadow: 0 0 0 4px rgba(255,255,255,0.4), 0 8px 24px rgba(0,0,0,0.5);"
                         :class="current === images.length - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:scale-110'">
@@ -77,7 +77,7 @@
                 @foreach($mediaItems as $i => $media)
                     <button @click="go({{ $i }})"
                             class="w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all"
-                            :class="{{ $i }} === current ? 'border-primary ring-2 ring-primary/30' : 'border-transparent hover:border-gray-300'">
+                            :class="{{ $i }} === current ? 'border-blue-500 ring-2 ring-blue-300' : 'border-transparent hover:border-gray-300'">
                         <img src="{{ $media->getUrl() }}" alt="{{ $product->name }} {{ $i + 1 }}"
                              class="w-full h-full object-cover">
                     </button>
@@ -137,67 +137,92 @@
     @endpush
     @endif
 
-    <!-- Details -->
-    <div class="flex flex-col">
-        <p class="text-sm text-gray-500 font-medium">SKU: {{ $product->sku }}</p>
-        <h1 class="mt-2 text-3xl font-bold text-gray-900 leading-tight">{{ $product->name }}</h1>
-        <p class="mt-4 text-3xl font-bold text-primary">${{ number_format($product->price, 2) }}</p>
+    <!-- Product Info - BLUF: Key info first for AI -->
+    <article class="flex flex-col">
+        <header>
+            <p class="text-sm text-gray-500 font-medium">SKU: {{ $product->sku }}</p>
+            <h1 class="mt-2 text-3xl font-bold text-gray-900 leading-tight">{{ $product->name }}</h1>
+            <p class="mt-4 text-3xl font-bold">$ {{ number_format($product->price, 2) }}</p>
+        </header>
 
-        @if($product->description)
-            <div class="mt-6 prose prose-sm text-gray-600 max-w-none">
-                {!! $product->description !!}
+        <!-- BLUF: Key purchase info first -->
+        <section class="mt-6" aria-labelledby="purchase-heading">
+            <h2 id="purchase-heading" class="sr-only">Purchase Options</h2>
+
+            <!-- Quantity -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Quantity</label>
+                <div class="flex items-center gap-3">
+                    <button wire:click="decrementQty"
+                            class="size-10 inline-flex items-center justify-center rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 transition-colors font-bold text-lg">
+                        −
+                    </button>
+                    <span class="w-12 text-center text-lg font-semibold text-gray-900">{{ $quantity }}</span>
+                    <button wire:click="incrementQty"
+                            class="size-10 inline-flex items-center justify-center rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 transition-colors font-bold text-lg">
+                        +
+                    </button>
+                </div>
             </div>
+
+            <!-- Add to Cart -->
+            <div class="mt-4 flex gap-3">
+                <button wire:click="addToCart"
+                        wire:loading.attr="disabled"
+                        class="flex-1 py-3.5 px-6 inline-flex justify-center items-center gap-2 text-sm font-semibold rounded-xl transition-all duration-300
+                            {{ $added ? 'bg-green-500 text-white' : 'bg-gray-900 text-white hover:bg-blue-600' }}">
+                    @if($added)
+                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Added to Cart!
+                    @else
+                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        Add to Cart
+                    @endif
+                </button>
+                <a href="/cart"
+                   class="py-3.5 px-5 inline-flex items-center justify-center text-sm font-semibold rounded-xl border-2 border-gray-200 text-gray-700 hover:border-blue-600 hover:text-blue-600 transition-colors">
+                    View Cart
+                </a>
+            </div>
+
+            <!-- Shipping info -->
+            <div class="mt-4 p-4 bg-gray-50 rounded-xl flex items-start gap-3">
+                <svg class="shrink-0 size-5 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <div>
+                    <p class="text-sm font-semibold text-gray-800">Free shipping on orders over $200</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Estimated delivery: 3–5 business days</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Description -->
+        @if($product->description)
+            <section class="mt-8" aria-labelledby="description-heading">
+                <h2 id="description-heading" class="text-lg font-semibold text-gray-900 mb-3">Product Description</h2>
+                <div class="prose prose-sm text-gray-600 max-w-none">
+                    {!! $product->description !!}
+                </div>
+            </section>
         @endif
 
-        <!-- Quantity -->
-        <div class="mt-8">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Quantity</label>
-            <div class="flex items-center gap-3">
-                <button wire:click="decrementQty"
-                        class="size-10 inline-flex items-center justify-center rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 transition-colors font-bold text-lg">
-                    −
-                </button>
-                <span class="w-12 text-center text-lg font-semibold text-gray-900">{{ $quantity }}</span>
-                <button wire:click="incrementQty"
-                        class="size-10 inline-flex items-center justify-center rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-100 transition-colors font-bold text-lg">
-                    +
-                </button>
-            </div>
-        </div>
+        <!-- Specifications Table -->
+        @if(!empty($product->specifications))
+            <section class="mt-8">
+                <x-product-specs-table :specs="$product->specifications" />
+            </section>
+        @endif
 
-        <!-- Add to Cart -->
-        <div class="mt-6 flex gap-3">
-            <button wire:click="addToCart"
-                    wire:loading.attr="disabled"
-                    class="flex-1 py-3.5 px-6 inline-flex justify-center items-center gap-2 text-sm font-semibold rounded-xl transition-all duration-300
-                        {{ $added ? 'bg-green-500 text-white' : 'bg-gray-900 text-white hover:bg-primary' }}">
-                @if($added)
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    Added to Cart!
-                @else
-                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    Add to Cart
-                @endif
-            </button>
-            <a href="/cart"
-               class="py-3.5 px-5 inline-flex items-center justify-center text-sm font-semibold rounded-xl border-2 border-gray-200 text-gray-700 hover:border-primary hover:text-primary transition-colors">
-                View Cart
-            </a>
-        </div>
-
-        <!-- Shipping info -->
-        <div class="mt-8 p-4 bg-gray-50 rounded-xl flex items-start gap-3">
-            <svg class="shrink-0 size-5 text-green-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-            <div>
-                <p class="text-sm font-semibold text-gray-800">Free shipping on orders over $200</p>
-                <p class="text-xs text-gray-500 mt-0.5">Estimated delivery: 3–5 business days</p>
-            </div>
-        </div>
-    </div>
+        <!-- FAQs -->
+        @if(!empty($product->faqs))
+            <section class="mt-8">
+                <x-product-faqs :faqs="$product->faqs" />
+            </section>
+        @endif
+    </article>
 </div>
